@@ -230,7 +230,8 @@ function CambioAceite ({inicioSesion, usuarioIniciado}) {
 
     return (
         <Fragment>
-            <h1 className="text-center">Cambio de Aceite</h1>
+        <div class="col-md-8 mx-auto"> 
+            <h1 className="mt-4 text-center">Cambio de Aceite</h1>
             {(error) ? <Error mensaje='Campo placa es obligatorio' /> : null}
             <form className="mt-2 mb-2" onSubmit={recarga}>
                 
@@ -255,7 +256,7 @@ function CambioAceite ({inicioSesion, usuarioIniciado}) {
                     </ul>}
                     
             </form>
-
+            </div>
         </Fragment >
     )
 }

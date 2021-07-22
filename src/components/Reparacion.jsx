@@ -107,7 +107,7 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
             setModal(true)
             return;
         }
-        guardarErrorModal(false);
+         guardarErrorModal(false);
 
         let date = new Date()
 
