@@ -6,7 +6,6 @@ import ReparacionLista from './ReparacionLista'
 import Swal from 'sweetalert2';
 import Error from '../pages/Error'
 
-
 function CamionListaS({ camion }) {
 
     return (
@@ -30,21 +29,63 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
     const [errorModal, guardarErrorModal] = useState(false)
     const [fecha1, setFecha1] = useState(false)
     const [reparaciones, guardarReparaciones] = useState([])
+    
+    // hooks consulta BD
+    const [triggerPlacaFecha, setTriggerPlacaFecha] = useState(false)
+    const [triggerPlaca, setTriggerPlaca] = useState(false)
+    const [triggerFecha, setTriggerFecha] = useState(false)
 
     const apiProd = environment.url
 
     const recarga = e => {
         e.preventDefault();
-        setTrigger(true);
-        setTriggerA(true);
+        //setTrigger(true);
+        //setTriggerA(true);
 
-        if (fecha === '' || placa === '') {
-            guardarError(true)
-            console.log(guardarError)
-            return;
+        //if (fecha === '' || placa === '') {
+           //  guardarError(true)
+        //     console.log(guardarError)
+        //     return;
+        //}
+
+        if (placa !== '' && fecha !== ''){
+            setTriggerPlacaFecha(true)
+        }
+        if (fecha !== ''){
+            setTriggerFecha(true)
+        }
+        if (placa !== ''){
+            setTriggerPlaca(true)
         }
         guardarError(false);
     }
+
+        useEffect(()=>{
+            if (triggerPlacaFecha){
+                const consultaPlacaFecha = async () => {
+                    const response = await axios.get(`${apiProd}reparacions?filter[where][entrada]=${fecha}&filter[where][idCamion]=${placa}`)
+                    guardarReparaciones(response.data)
+                    setTriggerPlacaFecha(false)
+                }
+                consultaPlacaFecha()
+            }
+            if (triggerFecha){
+                const consultaFecha = async () => {
+                    const response = await axios.get(`${apiProd}reparacions?filter[where][entrada]=${fecha}`)
+                    guardarReparaciones(response.data)
+                    setTriggerFecha(false)
+                }
+                consultaFecha()
+            }
+            if (triggerPlaca){
+                const consultaPlaca = async () => {
+                    const response = await axios.get(`${apiProd}reparacions?filter[where][idCamion]=${placa}`)
+                    guardarReparaciones(response.data)
+                    setTriggerPlaca(false)
+                }
+                consultaPlaca()
+            }
+        })
 
     const props1 = []
 
@@ -96,7 +137,6 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
     }
     //para almacenar el cedi en la reparacion
 
-
     const handlerButtonIngresar = () => {
 
         setModal(false);
@@ -124,7 +164,6 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
         }
 
         const cedi = usuarioIniciado.cedi
-
         //cuando se ingresa un reporte "aprobado" entra como False
         //0= False
         //1= True
@@ -174,7 +213,7 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
         <Fragment>
         <div className="col-md-8 mx-auto">
         <h1 className="text-center mt-4"> Reparaciones </h1>
-        {(error) ? <Error mensaje='Campo, placa y fecha son obligatorios' /> : null}
+        {/*(error) ? <Error mensaje='Campo, placa y fecha son obligatorios' /> : null*/}
         <form className="mt-2 mb-2" onSubmit={recarga}>
             <label className="ml-3">Fecha:</label>
             <div className="form-row">
@@ -183,7 +222,7 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
                  <input type="date" className="form-control" name="fecha_reparacion" onChange={e => guardarFecha(e.target.value)} />
                 </div>
                 <div className="form-group w-10 ml-3">
-                    <input type="text" className="form-control" name="placa" placeholder="Placa" onChange={e => setPlaca(e.target.value)} />
+                     <input type="text" className="form-control" name="placa" placeholder="Placa" onChange={e => setPlaca(e.target.value)} />
                 </div>
             </div>
 
@@ -192,6 +231,7 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
             {(inicioSesion && (usuarioIniciado.rol === 'Admin' || usuarioIniciado.rol === 'Supervisor')) ?
                 <Button color="info" className="mt-2" onClick={handlerButtonAgregar}>Agregar Reparación</Button>
                 : null}
+              
             <Modal
                 isOpen={modal}
                 toggle={toggle}
@@ -256,15 +296,11 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
                 </ul>}
         </form>
 
-
         </div>
         </Fragment >
 
     )
 
-
 }
 
 export default Reparacion;
-
-
