@@ -44,7 +44,7 @@ function CamionLista({camion,inicioSesion,usuarioIniciado} ){
             <p>
                 <span className="font-weight-bold text-warning">Camion: {camion.marca}{' '}</span><br></br>
                 <span className="font-weight-bold">  Placa: {camion.placa}</span><br></br>
-                 {/*<span className="font-weight-bold">  Ruta: {camion.ruta}</span><br></br>*/}
+                <span className="font-weight-bold">  Ruta: {camion.ruta}</span><br></br>
                 <span className="font-weight-bold">  Unidad de Negocio: {camion.unidad_negocio}</span><br></br>
                 <span className="font-weight-bold">  RTV: {camion.rtv}</span><br></br>
                 <span className="font-weight-bold">  TC: {camion.tc}</span><br></br>
