@@ -40,14 +40,14 @@ const LoginUser = ({ guardarInicioSesion, guardarUsuarioIniciado }) => {
                     'success'
                 )
                 const usuarioID = (resultLogin.data.id)
-                const bita = await axios.post(`${apiProd}bitacoraTallers`, {
-                    idUsuario: usuarioID,
-                    accion: `Ha ingresado al sistema el usuario: ${usuario}`,
-                    fecha: Date.now()
-                });
-                if(bita.status === 200){
-                    console.log('se ha agregado a la bitacora');
-                }
+                // const bita = await axios.post(`${apiProd}bitacoraTallers`, {
+                //     idUsuario: usuarioID,
+                //     accion: `Ha ingresado al sistema el usuario: ${usuario}`,
+                //     fecha: Date.now()
+                // });
+                // if(bita.status === 200){
+                //     console.log('se ha agregado a la bitacora');
+                // }
                 guardarInicioSesion(true);
                 guardarUsuarioIniciado(resultLogin.data)
                 console.log("USUARIOOO", (resultLogin.data.id));

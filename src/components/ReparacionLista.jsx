@@ -6,12 +6,12 @@ import Swal from 'sweetalert2';
 
 
 
-function ReparacionLista({ repara, inicioSesion,usuarioIniciado}) {
+function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
 
     const [modal, setModal] = useState(false);
     const [repuestos, setRepuestos] = useState('');
     const [costo, setCosto] = useState('');
-    const [objeto,setObjeto] = useState('')
+    const [objeto, setObjeto] = useState('')
     const [trigger, setTrigger] = useState(false)
     const [reparacion, setReparacion] = useState([])
     const [fecha1, setFecha1] = useState('')
@@ -19,7 +19,7 @@ function ReparacionLista({ repara, inicioSesion,usuarioIniciado}) {
 
     const apiProd = environment.url
 
-    const idReparacion =useRef('')
+    const idReparacion = useRef('')
 
     const props1 = []
     const {
@@ -35,17 +35,17 @@ function ReparacionLista({ repara, inicioSesion,usuarioIniciado}) {
 
         let date = new Date()
 
-            let day = date.getDate()
-            let month = date.getMonth() + 1
-            let year = date.getFullYear()
-            
-            if(month < 10){
+        let day = date.getDate()
+        let month = date.getMonth() + 1
+        let year = date.getFullYear()
+
+        if (month < 10) {
             console.log(`${year}-${month}-${day}`)
             setFecha1(`${year}-0${month}-${day}`)
-            }else{
+        } else {
             console.log(`${year}-${month}-${day}`)
             setFecha1(`${year}-${month}-${day}`)
-            }
+        }
 
         const objReporte = {
             salida: Date.now(),
@@ -56,13 +56,13 @@ function ReparacionLista({ repara, inicioSesion,usuarioIniciado}) {
 
         const EditarReparaciones = async () => {
             const resultado = await axios.patch(url, objReporte)
-            if(resultado.status){
+            if (resultado.status) {
                 Swal.fire(
                     'Salida de Taller',
                     'Se ha dado la Salida Correctamente',
                     'success'
                 )
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -75,7 +75,7 @@ function ReparacionLista({ repara, inicioSesion,usuarioIniciado}) {
     }
 
     useEffect(() => {
-        if(trigger){
+        if (trigger) {
             const queryRepara = async () => {
                 const response = await axios.get(`${apiProd}reparacions?filter[where][id]=${objeto}`)
                 setReparacion(response.data)
@@ -84,7 +84,7 @@ function ReparacionLista({ repara, inicioSesion,usuarioIniciado}) {
             setTrigger(false)
             queryRepara()
         }
-    },[setTrigger, objeto, apiProd, trigger])
+    }, [setTrigger, objeto, apiProd, trigger])
 
     const handleDarSalida = objt => {
         setModal(true)
@@ -96,54 +96,54 @@ function ReparacionLista({ repara, inicioSesion,usuarioIniciado}) {
 
     return (
         <Fragment>
-        <li className="list-group-item d-flex justify-content-between align-item-center" >
-            <p>
-                <span className="font-weight-bold text-info">Placa: {repara.idCamion}{' '}</span><br></br>
-                <span className="font-weight-bold">  Cedi: {repara.cedi}</span><br></br>
-                <span className="font-weight-bold">  Ruta: {repara.ruta}</span><br></br>
-                <span className="font-weight-bold">  Entrada: {repara.entrada}</span><br></br>
-                <span className="font-weight-bold">  Salida: {repara.salida}</span><br></br>
-                <span className="font-weight-bold">  Reporte: {repara.reporte}</span><br></br>
-                <span className="font-weight-bold">  Aprobado: {repara.aprobado}</span><br></br>
-                <span className="font-weight-bold">  Repuestos: {repara.repuestos}</span><br></br>
-                <span className="font-weight-bold">  Costo: {repara.costo}</span>
+            <li className="list-group-item d-flex justify-content-between align-item-center" >
+                <p>
+                    <span className="font-weight-bold text-info"> Placa: {repara.idCamion}{' '}</span><br></br>
+                    <span className="font-weight-bold">  Cedi: {repara.cedi}</span><br></br>
+                    <span className="font-weight-bold">  Ruta: {repara.ruta}</span><br></br>
+                    <span className="font-weight-bold">  Entrada: {repara.entrada}</span><br></br>
+                    <span className="font-weight-bold">  Salida: {repara.salida}</span><br></br>
+                    <span className="font-weight-bold">  Reporte: {repara.reporte}</span><br></br>
+                    <span className="font-weight-bold">  Aprobado: {repara.aprobado}</span><br></br>
+                    <span className="font-weight-bold">  Repuestos: {repara.repuestos}</span><br></br>
+                    <span className="font-weight-bold">  Costo: {repara.costo}</span>
 
-            </p>
-            <div>
-                {(inicioSesion && (usuarioIniciado.rol==='Admin'))?
-                <Button color="success" value={repara.id} onClick={handleDarSalida}>Dar Salida</Button>
-                : null}
+                </p>
+                <div>
+                    {(inicioSesion && (usuarioIniciado.rol === 'Admin')) ?
+                        <Button color="success" value={repara.id} onClick={handleDarSalida}>Dar Salida</Button>
+                        : null}
                 </div>
                 <Modal
-            isOpen={modal}
-            toggle={toggle}
-            className={className}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered>
-    <ModalHeader toggle={toggle}>Dar Salida a Camion</ModalHeader>
-    <ModalBody>
-        <div className="form-group w-50">
-    <h6>Repuestos:</h6>
-    <textarea
-        type="number"
-        className="form-control mt-3  mr-3 mb-1"
-        onChange={e => setRepuestos(e.target.value)}/>
-        </div>
-                                                            
-        <div className="form-group w-50">
-        <h6>Costo ₡:</h6>
-        <input
-        type="number"
-        className="form-control mt-3  mr-3 mb-1"
-        onChange={e => setCosto(e.target.value)}/>
-        </div>                                                            
-        </ModalBody>
-        <ModalFooter>
-        <Button color="primary" onClick={handleRepuestos}>Ingresar</Button>{' '}
-        <Button color="secondary" onClick={toggle}>Cancel</Button>
-        </ModalFooter>
-        </Modal>         
-        </li>
+                    isOpen={modal}
+                    toggle={toggle}
+                    className={className}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered>
+                    <ModalHeader toggle={toggle}>Dar Salida a Camion</ModalHeader>
+                    <ModalBody>
+                        <div className="form-group w-50">
+                            <h6>Repuestos:</h6>
+                            <textarea
+                                type="number"
+                                className="form-control mt-3  mr-3 mb-1"
+                                onChange={e => setRepuestos(e.target.value)} />
+                        </div>
+
+                        <div className="form-group w-50">
+                            <h6>Costo ₡:</h6>
+                            <input
+                                type="number"
+                                className="form-control mt-3  mr-3 mb-1"
+                                onChange={e => setCosto(e.target.value)} />
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={handleRepuestos}>Ingresar</Button>{' '}
+                        <Button color="secondary" onClick={toggle}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+            </li>
         </Fragment>
     )
 }
