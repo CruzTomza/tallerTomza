@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef, useEffect} from 'react'
+import React, { Fragment, useState, useRef, useEffect } from 'react'
 import { Link } from "react-router-dom";
 import environment from '../env/environment'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -7,7 +7,7 @@ import Error from '../pages/Error'
 import Swal from 'sweetalert2';
 import GTLista from './GasTomzaLista';
 
-const GasTomza = ({usuarioIniciado, gas, setTriggerApp,inicioSesion}) => {
+const GasTomza = ({ usuarioIniciado, gas, setTriggerApp, inicioSesion }) => {
 
     const [trigger, setTrigger] = useState(false)
     const [error, guardarError] = useState(false)
@@ -24,7 +24,7 @@ const GasTomza = ({usuarioIniciado, gas, setTriggerApp,inicioSesion}) => {
     const [marcaFin, setMarcaFin] = useState("")
     const [kilometraje, setKilometraje] = useState('')
     const [gasolina, setGasolina] = useState([])
-    const [tipo, setTipo] = useState('') 
+    const [tipo, setTipo] = useState('')
     const [codigo, setCodigo] = useState(0)
 
 
@@ -51,14 +51,14 @@ const GasTomza = ({usuarioIniciado, gas, setTriggerApp,inicioSesion}) => {
     }
 
     useEffect(() => {
-        if(triggerGas){
+        if (triggerGas) {
             console.log('TRIGGER', triggerGas);
             console.log('FECHAAA', fecha);
             const queryGas = async () => {
                 const response = await axios.get(`${apiProd}descarga_gasols?filter[where][fecha]=${fecha}&filter[where][cedi]=Gas Tomza`)
                 setGasolina(response.data)
                 console.log("PUTAsal", response.data
-                
+
                 );
                 console.log("Largo", gasolina.length);
             }
@@ -87,11 +87,11 @@ const GasTomza = ({usuarioIniciado, gas, setTriggerApp,inicioSesion}) => {
         const codig = parseInt(codigo)
 
 
-        if(codig === codi){
+        if (codig === codi) {
             console.log("IGUaL");
             const RellenoCisterna = async () => {
                 const result = await axios.patch(`${apiProd}bod_combustibles/${bodegaRef.current}`, objLleno)
-                if(result.status === 200){
+                if (result.status === 200) {
                     setTriggerApp(true)
                     Swal.fire(
                         `Se recargado la Cisterna`,
@@ -99,7 +99,7 @@ const GasTomza = ({usuarioIniciado, gas, setTriggerApp,inicioSesion}) => {
                         'success'
                     )
                     setModalCisterna(false)
-                }else{
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -131,8 +131,8 @@ const GasTomza = ({usuarioIniciado, gas, setTriggerApp,inicioSesion}) => {
     console.log("NIGGA", (gas[0].cap_actual - (marcaFin - marcaIni)));
     const handlerButtonIngresar = () => {
 
-        
-              
+
+
         if (placaModal === "" || marcaIni === "" || marcaFin === "" || kilometraje === "" || tipo === "") {
             guardarErrorModal(true)
             console.log(guardarErrorModal)
@@ -144,144 +144,144 @@ const GasTomza = ({usuarioIniciado, gas, setTriggerApp,inicioSesion}) => {
         const llenado = marcaFin - marcaIni
         const rebajoBodega = (gas[0].cap_actual - llenado)
 
-            if((gas[0].cap_actual) - (rebajoBodega) >= 3000){
+        if ((gas[0].cap_actual) - (rebajoBodega) >= 3000) {
 
-        const objGasolina = {
-            placa_camion: camionModal[0].placa,
-            fecha: Date.now(),
-            ruta: camionModal[0].ruta,
-            descarga: llenado,
-            cedi: usuarioIniciado.cedi,
-            tipo: tipo
-        }
-        console.log("GASOLINA", objGasolina);
-
-
-        console.log("BODEGA", rebajoBodega);
-
-        const objBodega = {
-            cap_actual: (rebajoBodega)
-        }
-        console.log("ACtual", gas[0].cap_actual);
-        console.log("rebajado", objBodega);
-
-        if(trigger){
-            setTriggerApp(true)
-            const AgregarCargaGas = async() => {
-                const result = await axios.post(`${apiProd}descarga_gasols`, objGasolina)
-                if(result.status === 200){
-                    console.log("DESCARGA");
-                }
-                setTrigger(false)
+            const objGasolina = {
+                placa_camion: camionModal[0].placa,
+                fecha: Date.now(),
+                ruta: camionModal[0].ruta,
+                descarga: llenado,
+                cedi: usuarioIniciado.cedi,
+                tipo: tipo
             }
-            AgregarCargaGas();
-        }
-        setTriggerApp(false)
+            console.log("GASOLINA", objGasolina);
 
-        if(triggerBod){
+
+            console.log("BODEGA", rebajoBodega);
+
+            const objBodega = {
+                cap_actual: (rebajoBodega)
+            }
+            console.log("ACtual", gas[0].cap_actual);
+            console.log("rebajado", objBodega);
+
+            if (trigger) {
+                setTriggerApp(true)
+                const AgregarCargaGas = async () => {
+                    const result = await axios.post(`${apiProd}descarga_gasols`, objGasolina)
+                    if (result.status === 200) {
+                        console.log("DESCARGA");
+                    }
+                    setTrigger(false)
+                }
+                AgregarCargaGas();
+            }
+            setTriggerApp(false)
+
+            if (triggerBod) {
                 console.log("BODEGA BAJA");
-                const EditarBodega = async() => {
-                    const result =  await axios.patch(`${apiProd}bod_combustibles/${bodegaRef.current}`, objBodega)
-                    if(result.status === 200){
+                const EditarBodega = async () => {
+                    const result = await axios.patch(`${apiProd}bod_combustibles/${bodegaRef.current}`, objBodega)
+                    if (result.status === 200) {
                         Swal.fire(
                             `Se han agredado ${llenado}Lts al camión placa ${camionModal[0].placa}`,
-                                'Se ha ingresado correctamente',
-                                'success'
+                            'Se ha ingresado correctamente',
+                            'success'
                         )
                         const bita = await axios.post(`${apiProd}bitacoraTallers`, {
                             idUsuario: usuarioIniciado.id,
                             accion: `Ha ingresado una descarga de combustible el usuario: ${usuarioIniciado.name}`,
                             fecha: Date.now()
                         });
-                        if(bita.status === 200){
+                        if (bita.status === 200) {
                             console.log('se ha agregado a la bitacora');
                         }
                     }
                     setTriggerBod(false)
                     setTriggerApp(true)
                 }
-            EditarBodega()
-            
-        idCamion.current = parseFloat(camionModal[0].id)
-        console.log("PREMIOO", idCamion.current);
-        }
+                EditarBodega()
 
-        if(triggerCam){
+                idCamion.current = parseFloat(camionModal[0].id)
+                console.log("PREMIOO", idCamion.current);
+            }
 
-        console.log("CAAAAMION", camionModal);
+            if (triggerCam) {
 
-        idCamion.current = parseInt(camionModal[0].id)
-        console.log("ID CAMION", idCamion.current)
+                console.log("CAAAAMION", camionModal);
 
-        console.log('Kilometraje Inicial', camionModal[0].kmInicial);
+                idCamion.current = parseInt(camionModal[0].id)
+                console.log("ID CAMION", idCamion.current)
 
-        const limite = (parseInt(camionModal[0].kmInicial) + 11000)
-        console.log('LIMITE', limite);
+                console.log('Kilometraje Inicial', camionModal[0].kmInicial);
 
-        const sumado = (parseInt(camionModal[0].kmTotal) + parseInt(kilometraje))
-        console.log('SUMADO', sumado);
+                const limite = (parseInt(camionModal[0].kmInicial) + 11000)
+                console.log('LIMITE', limite);
 
-        if(sumado < limite) {
-            
-        const objCamion = {
-            kmTotal: sumado,
-            cambio: 0
-        }
-            console.log('No ocupa cambio');
-            const EditarCamion = async () => {
-                const resultado = await axios.patch(`${apiProd}camions/${idCamion.current}`, objCamion)
-                    if(resultado.status === 200){
-                        console.log('MENORR');
+                const sumado = (parseInt(camionModal[0].kmTotal) + parseInt(kilometraje))
+                console.log('SUMADO', sumado);
+
+                if (sumado < limite) {
+
+                    const objCamion = {
+                        kmTotal: sumado,
+                        cambio: 0
                     }
-            }
-            EditarCamion()
-        } else{
-            const objCamion = {
-                kmInicial: sumado,
-                kmTotal: sumado,
-                cambio: 1
-            }
-            console.log('Ocupa cambio')
-            const EditarCamion = async () => {
-                const resultado = await axios.patch(`${apiProd}camions/${idCamion.current}`, objCamion)
-                    if(resultado.status === 200){
-                       console.log("MAYORR");
+                    console.log('No ocupa cambio');
+                    const EditarCamion = async () => {
+                        const resultado = await axios.patch(`${apiProd}camions/${idCamion.current}`, objCamion)
+                        if (resultado.status === 200) {
+                            console.log('MENORR');
+                        }
                     }
+                    EditarCamion()
+                } else {
+                    const objCamion = {
+                        kmInicial: sumado,
+                        kmTotal: sumado,
+                        cambio: 1
+                    }
+                    console.log('Ocupa cambio')
+                    const EditarCamion = async () => {
+                        const resultado = await axios.patch(`${apiProd}camions/${idCamion.current}`, objCamion)
+                        if (resultado.status === 200) {
+                            console.log("MAYORR");
+                        }
+                    }
+                    EditarCamion()
+
+                }
             }
-            EditarCamion()
-            
+
+        } else {
+            console.log("BODEGA ALTA");
+            Swal.fire(
+                `El tanque principal está en el mínimo`,
+                'Solicite llenado de tanque',
+                'error'
+            )
+            setModal(true)
         }
-        }
-        
-            }else{
-                console.log("BODEGA ALTA");
-                Swal.fire(
-                    `El tanque principal está en el mínimo`,
-                        'Solicite llenado de tanque',
-                        'error'
-                )
-                setModal(true)
-            }
-}
-    
+    }
+
     const handlePlaca = () => {
 
-        if(placaModal !== ''){
-        console.log("PASAAASS");
-                const queryCamion = async () => {
-                    const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placaModal}`)
-                    if(response.data.length === 0){
-                        Swal.fire(
-                            `Placa ${placaModal}, no encontrada`,
-                            'Intenta nuevamente',
-                            'error',
-                        )
-                        setCamionModal([])
-                    }
-                    setCamionModal(response.data)
+        if (placaModal !== '') {
+            console.log("PASAAASS");
+            const queryCamion = async () => {
+                const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placaModal}`)
+                if (response.data.length === 0) {
+                    Swal.fire(
+                        `Placa ${placaModal}, no encontrada`,
+                        'Intenta nuevamente',
+                        'error',
+                    )
+                    setCamionModal([])
                 }
-                queryCamion()
-        }else{
+                setCamionModal(response.data)
+            }
+            queryCamion()
+        } else {
             Swal.fire(
                 'Espacio Necesario',
                 'Intente nuevamente',
@@ -292,155 +292,157 @@ const GasTomza = ({usuarioIniciado, gas, setTriggerApp,inicioSesion}) => {
 
     return (
         <Fragment>
-            <h1 className="text-center">Combustible Gas Tomza</h1>
-            {(error) ? <Error mensaje='Campo fecha son obligatorios' /> : null}
-            <form className="mt-2 mb-2" onSubmit={recarga}>
-                <label className="ml-3">Fecha:</label>
-                <div className="form-row">
+            <div class="col-md-8 mx-auto">
+                <h1 className="mt-4 text-center">Combustible Gas Tomza</h1>
+                {(error) ? <Error mensaje='Campo fecha son obligatorios' /> : null}
+                <form className="mt-2 mb-2" onSubmit={recarga}>
+                    <label className="ml-3">Fecha:</label>
+                    <div className="form-row">
 
-                    <div className="form-group w-25 ml-3">
-                        <input type="date" className="form-control" name="fecha_reparacion" onChange={e => guardarFecha(e.target.value)} />
+                        <div className="form-group w-25 ml-3">
+                            <input type="date" className="form-control" name="fecha_reparacion" onChange={e => guardarFecha(e.target.value)} />
+                        </div>
                     </div>
-                </div>
 
-                <input type="submit" className="btn btn-primary ml-3 mr-2 mt-2" value="Consultar Gasto" />
+                    <input type="submit" className="btn btn-primary ml-3 mr-2 mt-2" value="Consultar Gasto" />
 
-                <Button color="info" className="mt-2" onClick={handlerButtonAgregar}>Agregar Gasto</Button>
+                    <Button color="info" className="mt-2" onClick={handlerButtonAgregar}>Agregar Gasto</Button>
 
-                <Button color="success" className="mt-2 ml-3" onClick={handleCisterna}>Cisternas Combustibles</Button>
+                    <Button color="success" className="mt-2 ml-3" onClick={handleCisterna}>Cisternas Combustibles</Button>
 
-                                                    <Modal
-                                                        isOpen={modal}
-                                                        toggle={toggle}
-                                                        aria-labelledby="contained-modal-title-vcenter"
-                                                        centered>
-                                                        <ModalHeader toggle={toggle}>Combustible</ModalHeader>
-                                                        <ModalBody>
-                                                        {(errorModal) ? <Error mensaje='Todos los campos son obligatorios' /> : null}
+                    <Modal
+                        isOpen={modal}
+                        toggle={toggle}
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered>
+                        <ModalHeader toggle={toggle}>Combustible</ModalHeader>
+                        <ModalBody>
+                            {(errorModal) ? <Error mensaje='Todos los campos son obligatorios' /> : null}
 
-                                                            <div className="form-group w-50">
-                                                                <h6>Placa:</h6>
-                                                                <input
-                                                                    type="text"
-                                                                    className="form-control mt-3  mr-3 mb-1"
-                                                                    onChange={e => setPlacaModal(e.target.value)}
-                                                                     />
-                                                                     <Button className="btn btn-success mt-2" onClick={handlePlaca}>Cargar Camion</Button>
-                                                            </div>
+                            <div className="form-group w-50">
+                                <h6>Placa:</h6>
+                                <input
+                                    type="text"
+                                    className="form-control mt-3  mr-3 mb-1"
+                                    onChange={e => setPlacaModal(e.target.value)}
+                                />
+                                <Button className="btn btn-success mt-2" onClick={handlePlaca}>Cargar Camion</Button>
+                            </div>
 
-                                                            {(camionModal.length !== 0) ?
-                                                                <div className="form-group w-50">
-                                                                    <h6>Ruta:</h6>
-                                                                    <input
-                                                                        id="disabledInput"
-                                                                        type="text"
-                                                                        className="form-control mt-3  mr-3 mb-1"
-                                                                        disabled="true"
-                                                                        ref={referenciaRuta}
-                                                                        defaultValue={camionModal[0].ruta}
-                                                                         />
-                                                                </div>
-                                                                : null}
+                            {(camionModal.length !== 0) ?
+                                <div className="form-group w-50">
+                                    <h6>Ruta:</h6>
+                                    <input
+                                        id="disabledInput"
+                                        type="text"
+                                        className="form-control mt-3  mr-3 mb-1"
+                                        disabled="true"
+                                        ref={referenciaRuta}
+                                        defaultValue={camionModal[0].ruta}
+                                    />
+                                </div>
+                                : null}
 
-                                                                {(camionModal.length !== 0) ?
-                                                                    <div className="form-group w-50">
-                                                                        <label>Tipo:</label>
-                                                                       <select className="custom-select"  onChange={e => setTipo(e.target.value)}>
-                                                                       <option value="">Tipo</option>
-                                                                       <option value="Recope">Viajes a Recope</option>
-                                                                       <option value="Aquilados">Viaje de Alquilados</option>
-                                                                       <option value="Metalco">Metalco</option>
-                                                                       <option value="La Cruz">La Cruz</option>
-                                                                       <option value="Carreta Guapiles">Carreta Guápiles</option>
-                                                                       <option value="Tanden">Tanden</option>
-                                                                       <option value="Carreta Sur">Carreta Zona Sur</option>
-                                                                       <option value="Traslados">Traslados</option>
-                                                                       </select>
-                                                                    </div>
-                                                                    : null}
+                            {(camionModal.length !== 0) ?
+                                <div className="form-group w-50">
+                                    <label>Tipo:</label>
+                                    <select className="custom-select" onChange={e => setTipo(e.target.value)}>
+                                        <option value="">Tipo</option>
+                                        <option value="Recope">Viajes a Recope</option>
+                                        <option value="Aquilados">Viaje de Alquilados</option>
+                                        <option value="Metalco">Metalco</option>
+                                        <option value="La Cruz">La Cruz</option>
+                                        <option value="Carreta Guapiles">Carreta Guápiles</option>
+                                        <option value="Tanden">Tanden</option>
+                                        <option value="Carreta Sur">Carreta Zona Sur</option>
+                                        <option value="Traslados">Traslados</option>
+                                    </select>
+                                </div>
+                                : null}
 
-                                                                {(camionModal.length !== 0) ?
-                                                                    <div className="form-group w-50">
-                                                                        <h6>Marca Inicial:</h6>
-                                                                        <input
-                                                                            type="text"
-                                                                            className="form-control mt-3  mr-3 mb-1"
-                                                                            onChange={e => setMarcaIni(e.target.value)}
-                                                                             />
-                                                                    </div>
-                                                                     : null}
+                            {(camionModal.length !== 0) ?
+                                <div className="form-group w-50">
+                                    <h6>Marca Inicial:</h6>
+                                    <input
+                                        type="text"
+                                        className="form-control mt-3  mr-3 mb-1"
+                                        onChange={e => setMarcaIni(e.target.value)}
+                                    />
+                                </div>
+                                : null}
 
-                                                                     {(camionModal.length !== 0) ?
-                                                                        <div className="form-group w-50">
-                                                                            <h6>Marca Final:</h6>
-                                                                            <input
-                                                                                type="text"
-                                                                                className="form-control mt-3  mr-3 mb-1"
-                                                                                onChange={e => setMarcaFin(e.target.value)}
-                                                                                 />
-                                                                        </div>
-                                                                         : null}
+                            {(camionModal.length !== 0) ?
+                                <div className="form-group w-50">
+                                    <h6>Marca Final:</h6>
+                                    <input
+                                        type="text"
+                                        className="form-control mt-3  mr-3 mb-1"
+                                        onChange={e => setMarcaFin(e.target.value)}
+                                    />
+                                </div>
+                                : null}
 
-                                                                         {(camionModal.length !== 0) ?
-                                                                            <div className="form-group w-50">
-                                                                                <h6>Kilometraje:</h6>
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control mt-3  mr-3 mb-1"
-                                                                                    onChange={e => setKilometraje(e.target.value)}
-                                                                                     />
-                                                                            </div>
-                                                                             : null}
+                            {(camionModal.length !== 0) ?
+                                <div className="form-group w-50">
+                                    <h6>Kilometraje:</h6>
+                                    <input
+                                        type="text"
+                                        className="form-control mt-3  mr-3 mb-1"
+                                        onChange={e => setKilometraje(e.target.value)}
+                                    />
+                                </div>
+                                : null}
 
-                                                        </ModalBody>
-                                                        <ModalFooter>
-                                                            <Button color="primary" onClick={handlerButtonIngresar}>Ingresar</Button>{' '}
-                                                            <Button color="secondary" onClick={toggle}>Cancel</Button>
-                                                        </ModalFooter>
-                                                    </Modal>
-                                                    <Modal
-                                                        isOpen={modalCisterna}
-                                                        toggle1={toggle1}
-                                                        aria-labelledby="contained-modal-title-vcenter"
-                                                        centered>
-                                                        <ModalHeader toggle1={toggle1}>Recarga Cisterna</ModalHeader>
-                                                        <ModalBody>
-                                                            <div className="form-group w-50">
-                                                                <h6>Código:</h6>
-                                                                <input
-                                                                    type="password"
-                                                                    className="form-control mt-3  mr-3 mb-1"
-                                                                    onChange={e => setCodigo(e.target.value)}
-                                                                     />
-                                                            </div>
-                                                        </ModalBody>
-                                                        <ModalFooter>
-                                                            <Button color="primary" onClick={handleLleno}>Ingresar</Button>{' '}
-                                                            <Button color="secondary" onClick={toggle1}>Cancel</Button>
-                                                        </ModalFooter>
-                                                    </Modal>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary" onClick={handlerButtonIngresar}>Ingresar</Button>{' '}
+                            <Button color="secondary" onClick={toggle}>Cancel</Button>
+                        </ModalFooter>
+                    </Modal>
+                    <Modal
+                        isOpen={modalCisterna}
+                        toggle1={toggle1}
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered>
+                        <ModalHeader toggle1={toggle1}>Recarga Cisterna</ModalHeader>
+                        <ModalBody>
+                            <div className="form-group w-50">
+                                <h6>Código:</h6>
+                                <input
+                                    type="password"
+                                    className="form-control mt-3  mr-3 mb-1"
+                                    onChange={e => setCodigo(e.target.value)}
+                                />
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary" onClick={handleLleno}>Ingresar</Button>{' '}
+                            <Button color="secondary" onClick={toggle1}>Cancel</Button>
+                        </ModalFooter>
+                    </Modal>
 
-        {(gasolina.length === 0) ?
-            <div className="alert alert-dismissible alert-light mt-3">
-            <h4 className="alert-heading text-center">No hay Datos</h4>
-            <p className="mb-0 text-center">Consulte los datos Primero</p>
+                    {(gasolina.length === 0) ?
+                        <div className="alert alert-dismissible alert-light mt-3">
+                            <h4 className="alert-heading text-center">No hay Datos</h4>
+                            <p className="mb-0 text-center">Consulte los datos Primero</p>
+                        </div>
+                        :
+                        <ul className="list-group mt-5">
+                            {gasolina.map(gaso => (
+                                <GTLista
+                                    key={gaso.id}
+                                    gaso={gaso}
+                                    usuarioIniciado={usuarioIniciado}
+                                    inicioSesion={inicioSesion}
+                                />
+                            ))}
+                        </ul>
+                    }
+
+                </form>
             </div>
-            :
-                <ul className="list-group mt-5">
-                {gasolina.map(gaso => (
-                <GTLista 
-                key={gaso.id}
-                gaso={gaso}
-                usuarioIniciado={usuarioIniciado}
-                inicioSesion={inicioSesion}
-                />
-            ))}
-            </ul>
-        } 
-            
-            </form>
         </Fragment >
-        )
+    )
 }
 
 

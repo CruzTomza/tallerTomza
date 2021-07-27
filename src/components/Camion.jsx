@@ -52,7 +52,7 @@ function AgregarCamion({ history, guardarRecarga, usuarioIniciado }) {
 
     return (
         <div className="col-md-8 mx-auto ">
-            <h1 className="text-center">Agregar Camion</h1>
+            <h1 className="text-center mt-4">Agregar Camion</h1>
             
 
             <form

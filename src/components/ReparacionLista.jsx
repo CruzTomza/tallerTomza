@@ -3,8 +3,7 @@ import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import environment from '../env/environment'
 import Swal from 'sweetalert2';
-
-
+import TableMod from './Table'
 
 function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
 
@@ -15,7 +14,6 @@ function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
     const [trigger, setTrigger] = useState(false)
     const [reparacion, setReparacion] = useState([])
     const [fecha1, setFecha1] = useState('')
-
 
     const apiProd = environment.url
 
@@ -73,7 +71,6 @@ function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
         EditarReparaciones()
         setModal(false)
     }
-
     useEffect(() => {
         if (trigger) {
             const queryRepara = async () => {
@@ -93,20 +90,20 @@ function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
 
     }
 
+    const reparacionHeaders = [
+        'Placa', 'Cedi', 'Entrada', 'Salida', 'Reporte', 'Aprobado', 'Repuestos', 'Costo'
+    ]
+
+    const reparacionBody = repara
 
     return (
         <Fragment>
             <li className="list-group-item d-flex justify-content-between align-item-center" >
                 <p>
-                    <span className="font-weight-bold text-info"> Placa: {repara.idCamion}{' '}</span><br></br>
-                    <span className="font-weight-bold">  Cedi: {repara.cedi}</span><br></br>
-                    <span className="font-weight-bold">  Ruta: {repara.ruta}</span><br></br>
-                    <span className="font-weight-bold">  Entrada: {repara.entrada}</span><br></br>
-                    <span className="font-weight-bold">  Salida: {repara.salida}</span><br></br>
-                    <span className="font-weight-bold">  Reporte: {repara.reporte}</span><br></br>
-                    <span className="font-weight-bold">  Aprobado: {repara.aprobado}</span><br></br>
-                    <span className="font-weight-bold">  Repuestos: {repara.repuestos}</span><br></br>
-                    <span className="font-weight-bold">  Costo: {repara.costo}</span>
+
+                    <TableMod dataHeader={reparacionHeaders} dataBody={reparacionBody}>
+
+                    </TableMod>
 
                 </p>
                 <div>
@@ -120,7 +117,7 @@ function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
                     className={className}
                     aria-labelledby="contained-modal-title-vcenter"
                     centered>
-                    <ModalHeader toggle={toggle}>Dar Salida a Camion</ModalHeader>
+                    <ModalHeader toggle={toggle}>Dar salida a camion</ModalHeader>
                     <ModalBody>
                         <div className="form-group w-50">
                             <h6>Repuestos:</h6>
@@ -147,6 +144,5 @@ function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
         </Fragment>
     )
 }
-
 
 export default ReparacionLista;

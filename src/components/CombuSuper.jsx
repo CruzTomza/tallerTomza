@@ -292,7 +292,8 @@ const SuperGas = ({usuarioIniciado, superG, setTriggerApp,inicioSesion}) => {
 
     return (
         <Fragment>
-            <h1 className="text-center">Combustible Super Gas
+        <div class="col-md-8 mx-auto">
+            <h1 className="mt-4 text-center">Combustible Super Gas
             </h1>
             {(error) ? <Error mensaje='Campo fecha son obligatorios' /> : null}
             <form className="mt-2 mb-2" onSubmit={recarga}>
@@ -440,6 +441,7 @@ const SuperGas = ({usuarioIniciado, superG, setTriggerApp,inicioSesion}) => {
         } 
             
             </form>
+            </div>
         </Fragment >
         )
 }
