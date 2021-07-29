@@ -1,94 +1,49 @@
 import axios from 'axios';
-import React,{useState, Fragment, useEffect} from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import environment from '../env/environment'
+import { Link } from "react-router-dom";
 import CamionLista from './MantenimientoLista'
 import Error from '../pages/Error'
+import { GoTools } from "react-icons/go";
+import { GiWeight } from "react-icons/gi";
+import { FaLeaf } from "react-icons/fa";
 
 
-function Mantenimiento({inicioSesion, usuarioIniciado}) {
 
-    const [trigger, setTrigger] = useState(false)
-    const [camiones, guardarCamiones] = useState([])
-    const [error, guardarError] = useState(false)
-    const [rtv, setRtv] = useState('')
+function Mantenimiento() {
 
-    
-    const apiProd = environment.url
-    
-    const recarga = e => {
-        e.preventDefault();
-        setTrigger(true);
-        if (rtv === '') {
-            guardarError(true)
-            console.log(guardarError)
-            return;
-        }
-        guardarError(false);
-    }
 
-    useEffect(() => {
-        if(trigger){
-            console.log("PASA")
-            const consultaCamion = async () => {
-            const response = await axios.get(`${apiProd}camions?filter[where][rtv]=${rtv}`);
-            guardarCamiones(response.data)
-            console.log("CAMIONES", response.data)
-            }
-            consultaCamion()
-            setTrigger(false)
-    }
-    }, [trigger, apiProd])
-    console.log("CAMIONES", camiones)
 
     return (
         <Fragment>
-        <div class="col-md-8 mx-auto">
-        <h1 className="mt-4 text-center">Mantenimiento</h1>
-        {(error) ? <Error mensaje='Campo placa es obligatorio' /> : null}
-            <form className="mt-2 mb-2" onSubmit={recarga}>
-                <label className="ml-3">Rtv:</label>
-                <div className="form-row">
-                    <div className="form-group w-10 ml-3">
-                    <select className="custom-select" onChange={e => setRtv(e.target.value)}>
-                            <option disabled selected="">Consultar...</option>
-                            <option value="Enero y Julio">Enero y Julio</option>
-                            <option value="Febrero y Agosto">Febrero y Agosto</option>
-                            <option value="Marzo y Setiembre">Marzo y Setiembre</option>
-                            <option value="Mayo y Noviembre">Mayo y Noviembre</option>
-                            <option value="Abril y Octubre">Abril y Octubre</option>
-
-                        </select>
-                    </div>
+            <div class="col-md-8 mx-auto">
+                <h1 className="mt-4 text-center">Mantenimiento</h1>
+                <div className='d-flex justify-content-center mt-4'>
+                    <Link to="/Taller/mante/rtv">
+                        <div className='border mt-4 mr-4 text-primary text-center hover-shadow'>
+                            <GoTools size="8em" className='m-4' /><br />
+                            <hr></hr>
+                            <h6>RTV</h6>
+                        </div>
+                    </Link>
+                    <Link to="/Taller/mante/pesosdimensiones">
+                        <div className='border mt-4 mr-4 text-secondary text-center hover-shadow'>
+                            <GiWeight size="8em" className='m-4' /><br />
+                            <hr></hr>
+                            <h6>Pesos y Dimensiones</h6>
+                        </div>
+                    </Link>
+                    <Link to="/Taller/mante/minae">
+                        <div className='border mt-4 text-success text-center hover-shadow'>
+                            <FaLeaf size="8em" className='m-4' /><br />
+                            <hr></hr>
+                            <h6>MINAE</h6>
+                        </div>
+                    </Link>
                 </div>
-
-                <input type="submit" className="btn btn-primary ml-3 mr-2 mt-2" value="Consultar Mantenimieto" />
-                </form>
-
-                {(camiones.length === 0) ?
-                    <div className="alert alert-dismissible alert-light mt-3">
-                        <h4 className="alert-heading text-center" >No Hay Datos</h4>
-                        <p className="mb-0 text-center">Consulte los datos Primero</p>
-                    </div>
-                    :
-                    <div>
-                        <ul className="list-group mt-3">
-                            {camiones.map(camion => (
-                                <CamionLista
-                                    key={camion.id}
-                                    camion={camion}
-                                    inicioSesion={inicioSesion}
-                                    usuarioIniciado={usuarioIniciado}
-                                />
-                            ))}
-                        </ul>
-                        <ul className="list-group mt-3">
-                                
-                        </ul>
-                    </div>
-                }
-                </div> 
+            </div>
         </Fragment>
-        
+
     )
 }
 
