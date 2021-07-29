@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 
 function Table(props) {
     console.log(props)
-    const [header, setHeader] = useState(props.dataHeader)
-    const [tableBody, setTableBody] = useState([]) 
+    const [header, setHeader] = useState(props.headers)
+    const [tableBody, setTableBody] = useState([])
     const [trigger, setTrigger] = useState(true)
 
-    useEffect (() => {
+    useEffect(() => {
         if (trigger) {
-            setTableBody([props.dataBody])
+            setTableBody(props.props)
             setTrigger(false)
         }
     })
@@ -19,14 +19,14 @@ function Table(props) {
         
         for (var i=0; i<tableBody.length; i++) {
             
-            let date = new Date(tableBody[i].entrada)
+            let date = new Date(tableBody[i].tc)
+            console.log(tableBody[i].tc);
             formatted = date.toLocaleString('es-Es')
-            tableBody[i].entrada= formatted
+            tableBody[i].tc= formatted
             console.log('...',date.toLocaleString('es-Es'),tableBody);
         }
         return formatted
     }
-   
     console.log('header', header, 'dataBody', tableBody)
     return (
         <section>
@@ -40,35 +40,28 @@ function Table(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {tableBody.map(x => 
+                        {tableBody.map(x =>
                             <tr>
                                 <td>
-                                    {x.id}
+                                    {x.placa}
                                 </td>
                                 <td>
-                                    {x.cedi}
+                                    {x.marca}
                                 </td>
                                 <td>
-                                    {formatFecha()}
+                                    {x.kmInicial}
                                 </td>
                                 <td>
-                                    {x.salida}
+                                    {x.kmTotal}
                                 </td>
                                 <td>
-                                    {x.reporte}
+                                    {x.cambio}
                                 </td>
                                 <td>
-                                    {x.aprobado}
-                                </td>
-                                
-                                <td>
-                                    {x.repuestos}
-                                </td>
-                                <td>
-                                    {x.costo}
+                                    {x.tc}
                                 </td>
                             </tr>
-                    )}
+                        )}
                     </tbody>
                 </table>
             </div>

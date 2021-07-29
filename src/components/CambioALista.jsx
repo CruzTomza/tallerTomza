@@ -12,6 +12,7 @@ function CambioALista ({cam, inicioSesion, usuarioIniciado}) {
     const [camion, setCamion] = useState([])
     const [trigger, setTrigger] = useState(false)
 
+    //const [triggerPlaca, setTriggerPlaca] = useState(false)
 
     const idCamion = useRef('')
 
@@ -128,27 +129,19 @@ function CambioALista ({cam, inicioSesion, usuarioIniciado}) {
                 <Button color="success"  onClick={handleDarSalida}>Dar Salida</Button>
                 : null}
                 </div> 
-                <Modal
-                                                        isOpen={modal}
-                                                        toggle={toggle}
-                                                        className={className}
-                                                        aria-labelledby="contained-modal-title-vcenter"
-                                                        centered>
-                                                        <ModalHeader toggle={toggle}>Ingrese Código</ModalHeader>
-                                                        <ModalBody>
-                                                            <div className="form-group w-50">
-                                                                <h6>Código:</h6>
-                                                                <input
-                                                                    type="password"
-                                                                    className="form-control mt-3  mr-3 mb-1"
-                                                                    onChange={e => setCodigo(e.target.value)}/>
-                                                            </div>
-                                                        </ModalBody>
-                                                        <ModalFooter>
-                                                            <Button color="primary" value={cam.id} onClick={handlerButtonValidar}>Validar</Button>{' '}
-                                                            <Button color="secondary" onClick={toggle}>Cancel</Button>
-                                                        </ModalFooter>
-                                                    </Modal>                      
+    <Modal isOpen={modal} toggle={toggle} className={className} aria-labelledby="contained-modal-title-vcenter" centered>
+    <ModalHeader toggle={toggle}>Ingrese Código</ModalHeader>
+    <ModalBody>
+    <div className="form-group w-50">
+    <h6>Código:</h6>
+    <input type="password" className="form-control mt-3  mr-3 mb-1"onChange={e => setCodigo(e.target.value)}/>
+            </div>
+    </ModalBody>
+    <ModalFooter>
+     <Button color="primary" value={cam.id} onClick={handlerButtonValidar}>Validar</Button>{' '}
+     <Button color="secondary" onClick={toggle}>Cancel</Button>
+        </ModalFooter>
+        </Modal>                      
         </li>
         </Fragment>
     )
