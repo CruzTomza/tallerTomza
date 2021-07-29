@@ -1,12 +1,13 @@
 import axios from 'axios';
-import React,{useState, Fragment, useEffect, useRef} from 'react'
+import React, { useState, Fragment, useEffect, useRef } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import environment from '../env/environment'
 import CambioALista from './CambioALista'
 import Swal from 'sweetalert2';
 import Error from '../pages/Error'
+import TableAceite from './TableAceite'
 
-function CambioAceite ({inicioSesion, usuarioIniciado}) {
+function CambioAceite({ inicioSesion, usuarioIniciado }) {
 
 
     const [trigger, setTrigger] = useState(false)
@@ -17,8 +18,11 @@ function CambioAceite ({inicioSesion, usuarioIniciado}) {
     const [camionModal, setCamionModal] = useState([])
     const [error, guardarError] = useState(false)
     const [errorModal, guardarErrorModal] = useState(false)
+    const [placa, setPlaca] = useState('')
+    const [cambio, guardarCambios] = useState([])
+    const header = ['Placa', 'Marca', 'Km Actual', 'Km Final', 'Km para el Cambio', 'Ultimo Cambio']
 
-
+    const [triggerPlaca, setTriggerPlaca] = useState(false)
 
     const idCamion = useRef('')
     const rutaRef = useRef('')
@@ -56,33 +60,33 @@ function CambioAceite ({inicioSesion, usuarioIniciado}) {
 
         const sumado = (parseInt(camionModal[0].kmTotal) + parseInt(kilometraje))
         console.log('SUMADO', sumado);
-       
-        
-        if(sumado < limite) {
-            
-        const objCamion = {
-            kmTotal: sumado,
-            cambio: 0
-        }
+
+
+        if (sumado < limite) {
+
+            const objCamion = {
+                kmTotal: sumado,
+                cambio: 0
+            }
             console.log('No ocupa cambio');
             const EditarCamion = async () => {
                 const resultado = await axios.patch(`${apiProd}camions/${idCamion.current}`, objCamion)
-                    if(resultado.status === 200){
-                        Swal.fire(
-                            'Reporte Agregado',
-                            'Se ha agregado Correctamente',
-                            'success'
-                        )
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Vuelve a Intentarlo'
-                        })
-                    }
+                if (resultado.status === 200) {
+                    Swal.fire(
+                        'Reporte Agregado',
+                        'Se ha agregado Correctamente',
+                        'success'
+                    )
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Vuelve a Intentarlo'
+                    })
+                }
             }
             EditarCamion()
-        } else{
+        } else {
             const objCamion = {
                 kmInicial: sumado,
                 kmTotal: sumado,
@@ -91,19 +95,19 @@ function CambioAceite ({inicioSesion, usuarioIniciado}) {
             console.log('Ocupa cambio')
             const EditarCamion = async () => {
                 const resultado = await axios.patch(`${apiProd}camions/${idCamion.current}`, objCamion)
-                    if(resultado.status === 200){
-                        Swal.fire(
-                            'Reporte Agregado',
-                            'Se ha agregado Correctamente',
-                            'success'
-                        )
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Vuelve a Intentarlo'
-                        })
-                    }
+                if (resultado.status === 200) {
+                    Swal.fire(
+                        'Reporte Agregado',
+                        'Se ha agregado Correctamente',
+                        'success'
+                    )
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Vuelve a Intentarlo'
+                    })
+                }
             }
             EditarCamion()
         }
@@ -111,30 +115,35 @@ function CambioAceite ({inicioSesion, usuarioIniciado}) {
 
     const recarga = e => {
         e.preventDefault();
-        setTrigger(true)
-        console.log("RECARGA");
+        if (placa !== '') {
+            setTriggerPlaca(true)
+        } else {
+            setTrigger(true)
+        }
+        console.log("RECARGA", e, 'placa',placa);
+           
 
-        // if (placa === '') {
-        //     guardarError(true)
-        //     console.log(guardarError)
-        //     return;
-        // }
-        // guardarError(false);
-    }
-//     const handlerButtonCamiones = () => {
-//         setTriggerCamion(true)
-//     // useEffect(() => {
-//         if(triggerCamion){
-//             const queryCamiones = async () => {
-//                 const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placa}`)
-//                 setCamiones(response.data)
-//             }
-//             queryCamiones();
-//             setTriggerCamion(false)
-//             console.log("CAMIIIIIIo", camiones);
-//         }
-//     // })
-// }
+            // if (placa === '') {
+            //     guardarError(true)
+            //     console.log(guardarError)
+            //     return;
+            // }
+            // guardarError(false);
+        }
+        //     const handlerButtonCamiones = () => {
+        //         setTriggerCamion(true)
+        //     // useEffect(() => {
+        //         if(triggerCamion){
+        //             const queryCamiones = async () => {
+        //                 const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placa}`)
+        //                 setCamiones(response.data)
+        //             }
+        //             queryCamiones();
+        //             setTriggerCamion(false)
+        //             console.log("CAMIIIIIIo", camiones);
+        //         }
+        //     // })
+
     const props1 = []
     const {
         className
@@ -146,117 +155,123 @@ function CambioAceite ({inicioSesion, usuarioIniciado}) {
     // const handlerButtonCambioAceite = () => {
     //     setTrigger(true)
     useEffect(() => {
-        if(trigger){
+        if (trigger) {
             const queryCambios = async () => {
                 const response = await axios.get(`${apiProd}camions/?filter[where][cambio]=${1}`)
                 setCambios(response.data)
             }
             queryCambios();
             setTrigger(false)
-        
+
         }
     }, [trigger, apiProd])
-// }
 
-        // const handlePlaca = async e => {
-        // e.preventDefault();
-        //         const queryCamion = async () => {
-        //             const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placaModal}`)
-        //             setCamionModal(response.data)
-        //         }
-        //         queryCamion()
-        // }
+    if (triggerPlaca) {
+        const consultaPlaca = async () => {
+            const response = await axios.get(`${apiProd}camions?filter[where][placa]=${placa}`)
+            setCambios(response.data)
+            setTriggerPlaca(false)
+            console.log(response.data);
+        }
+        consultaPlaca()
+    }
 
-        // <label className="ml-3">Placa:</label>
-        //         <div className="form-row">
-        //             <div className="form-group w-10 ml-3">
-        //                 <input type="text" className="form-control" name="placa" placeholder="Placa" onChange={e => setPlaca(e.target.value)} />
-        //             </div>
-        //         </div>
+    // }
 
-        // <Button color="info" className="mt-2" onClick={handlerButtonAgregar}>Agregar Reporte</Button>
-                //                                     <Modal
-                //                                         isOpen={modal}
-                //                                         toggle={toggle}
-                //                                         className={className}
-                //                                         aria-labelledby="contained-modal-title-vcenter"
-                //                                         centered>
-                //                                         <ModalHeader toggle={toggle}>Reporte Kilometraje</ModalHeader>
-                //                                         <ModalBody>
-                //                                         {(errorModal) ? <Error mensaje='Campo Kilometraje es Requerido' /> : null}
+    // const handlePlaca = async e => {
+    // e.preventDefault();
+    //         const queryCamion = async () => {
+    //             const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placaModal}`)
+    //             setCamionModal(response.data)
+    //         }
+    //         queryCamion()
+    // }
 
-                //                                         <div className="form-group w-50">
-                //                                                 <h6>Placa:</h6>
-                //                                                 <input
-                //                                                     type="text"
-                //                                                     className="form-control mt-3  mr-3 mb-1"
-                //                                                     onChange={e => setPlacaModal(e.target.value)}
-                //                                                      />
-                //                                             <Button className="btn btn-success" onClick={handlePlaca}>Cargar Camion</Button>
-                //                                             </div>
+    // <label className="ml-3">Placa:</label>
+    //         <div className="form-row">
+    //             <div className="form-group w-10 ml-3">
+    //                 <input type="text" className="form-control" name="placa" placeholder="Placa" onChange={e => setPlaca(e.target.value)} />
+    //             </div>
+    //         </div>
 
-                //                                             {(camionModal.length !== 0) ?
-                //                                             <div className="form-group w-50">
-                //                                                 <h6>Ruta:</h6>
-                //                                                 <input
-                //                                                     id="disabledInput"
-                //                                                     type="text"
-                //                                                     className="form-control mt-3  mr-3 mb-1"
-                //                                                     disabled="true"
-                //                                                     ref={referenciaRuta}
-                //                                                     defaultValue={camionModal[0].ruta}
-                //                                                      />
-                //                                             </div> 
-                //                                             : null}
+    // <Button color="info" className="mt-2" onClick={handlerButtonAgregar}>Agregar Reporte</Button>
+    //                                     <Modal
+    //                                         isOpen={modal}
+    //                                         toggle={toggle}
+    //                                         className={className}
+    //                                         aria-labelledby="contained-modal-title-vcenter"
+    //                                         centered>
+    //                                         <ModalHeader toggle={toggle}>Reporte Kilometraje</ModalHeader>
+    //                                         <ModalBody>
+    //                                         {(errorModal) ? <Error mensaje='Campo Kilometraje es Requerido' /> : null}
 
-                //                                             {(camionModal.length !== 0) ?
-                //                                             <div className="form-group w-50">
-                //                                                 <h6>Kilometraje:</h6>
-                //                                                 <input
-                //                                                     type="text"
-                //                                                     className="form-control mt-3  mr-3 mb-1"
-                //                                                     onChange={e => setKilometraje(e.target.value)}
-                //                                                      />
-                //                                             </div>
-                //                                              : null}
-                //                                         </ModalBody>
-                //                                         <ModalFooter>
-                //                                             <Button color="primary" onClick={handlerButtonIngresar}>Ingresar</Button>{' '}
-                //                                                     <Button color="warning" onClick={toggle}>Cancel</Button>
-                //                                         </ModalFooter>
-                //                                     </Modal>   
+    //                                         <div className="form-group w-50">
+    //                                                 <h6>Placa:</h6>
+    //                                                 <input
+    //                                                     type="text"
+    //                                                     className="form-control mt-3  mr-3 mb-1"
+    //                                                     onChange={e => setPlacaModal(e.target.value)}
+    //                                                      />
+    //                                             <Button className="btn btn-success" onClick={handlePlaca}>Cargar Camion</Button>
+    //                                             </div>
+
+    //                                             {(camionModal.length !== 0) ?
+    //                                             <div className="form-group w-50">
+    //                                                 <h6>Ruta:</h6>
+    //                                                 <input
+    //                                                     id="disabledInput"
+    //                                                     type="text"
+    //                                                     className="form-control mt-3  mr-3 mb-1"
+    //                                                     disabled="true"
+    //                                                     ref={referenciaRuta}
+    //                                                     defaultValue={camionModal[0].ruta}
+    //                                                      />
+    //                                             </div> 
+    //                                             : null}
+
+    //                                             {(camionModal.length !== 0) ?
+    //                                             <div className="form-group w-50">
+    //                                                 <h6>Kilometraje:</h6>
+    //                                                 <input
+    //                                                     type="text"
+    //                                                     className="form-control mt-3  mr-3 mb-1"
+    //                                                     onChange={e => setKilometraje(e.target.value)}
+    //                                                      />
+    //                                             </div>
+    //                                              : null}
+    //                                         </ModalBody>
+    //                                         <ModalFooter>
+    //                                             <Button color="primary" onClick={handlerButtonIngresar}>Ingresar</Button>{' '}
+    //                                                     <Button color="warning" onClick={toggle}>Cancel</Button>
+    //                                         </ModalFooter>
+    //                                     </Modal>   
 
     return (
         <Fragment>
-        <div class="col-md-8 mx-auto"> 
-            <h1 className="mt-4 text-center">Cambio de Aceite</h1>
-            {(error) ? <Error mensaje='Campo placa es obligatorio' /> : null}
-            <form className="mt-2 mb-2" onSubmit={recarga}>
-                
-
-                <input type="submit" className="btn btn-primary ml-3 mr-2 mt-2" value="Consultar Cambio" />
- 
-                {(cambios.length === 0) ?
-                    <div className="alert alert-dismissible alert-light mt-3">
-                    <h4 className="alert-heading text-center">No hay Datos</h4>
-                    <p className="mb-0 text-center">Consulte los datos Primero</p>
+            <div class="col-md-8 mx-auto">
+                <h1 className="mt-4 text-center">Cambio de Aceite</h1>
+                {(error) ? <Error mensaje='Campo placa es obligatorio' /> : null}
+                <form className="mt-2 mb-2" onSubmit={recarga}>
+                    <div className="form-group w-10 ml-3">
+                        <input type="text" className="form-control" name="placa" placeholder="Placa" onChange={e => setPlaca(e.target.value)} />
                     </div>
-                    :
-                        <ul className="list-group mt-5">
-                    {cambios.map(cam => (
-                        <CambioALista 
-                        key={cam.id}
-                        cam={cam}
-                        usuarioIniciado={usuarioIniciado}
-                        inicioSesion={inicioSesion}
-                        />
-                    ))}
-                    </ul>}
-                    
-            </form>
+                    <input type="submit" className="btn btn-primary ml-3 mr-2 mt-2" value="Consultar Cambio" />
+
+                    {(cambios.length === 0) ?
+                        <div className="alert alert-dismissible alert-light mt-3">
+                            <h4 className="alert-heading text-center">No hay Datos</h4>
+                            <p className="mb-0 text-center">Consulte los datos Primero</p>
+                        </div>
+                        :
+                        <TableAceite headers = {header} props = {cambios}/>
+
+                    }
+
+                </form>
             </div>
         </Fragment >
     )
 }
+
 
 export default CambioAceite
