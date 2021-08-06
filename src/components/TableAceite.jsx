@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
+
 function Table(props) {
     console.log(props)
     const [header, setHeader] = useState(props.headers)
@@ -31,7 +32,7 @@ function Table(props) {
     return (
         <section>
             <div>
-                <table className='table'>
+                <table className='table mt-4'>
                     <thead>
                         <tr>
                             {header.map(x =>
@@ -55,7 +56,7 @@ function Table(props) {
                                     {x.kmTotal}
                                 </td>
                                 <td>
-                                    {x.cambio}
+                                    {x.kmTotal - x.kmInicial}
                                 </td>
                                 <td>
                                     {x.tc}

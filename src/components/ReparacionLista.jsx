@@ -7,6 +7,8 @@ import TableMod from './Table'
 
 function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
 
+    console.log('reparaaaaaaaa',repara);
+
     const [modal, setModal] = useState(false);
     const [repuestos, setRepuestos] = useState('');
     const [costo, setCosto] = useState('');
@@ -96,16 +98,83 @@ function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
 
     const reparacionBody = repara
 
+    const formatFecha = (x) => {
+        let formatted
+
+        let date = new Date(x)
+        formatted = date.toLocaleString('es-Es')
+
+        console.log('formatted',formatted);
+        return formatted
+    }
+
     return (
         <Fragment>
-            <li className="list-group-item d-flex justify-content-between align-item-center" >
-                <p>
+            <div className="list-group-item d-flex justify-content-between align-item-center mt-4" >
+                
+                <table className = "table">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                Placa
+                            </th>
+                            <th scope="col">
+                                Cedi
+                            </th>
+                            <th scope="col">
+                                Entrada
+                            </th>
+                            <th scope="col">
+                                Salida
+                            </th>
+                            <th scope="col">
+                                Reporte
+                            </th>
+                            <th scope="col">
+                                Aprobado
+                            </th>
+                            <th scope="col">
+                                Repuestos
+                            </th>
+                            <th scope="col">
+                                Costo
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            repara[0].map(x =>
+                                <tr>
+                                    <td>
+                                        {x.idCamion}
+                                    </td>
+                                    <td>
+                                        {x.cedi}
+                                    </td>
+                                    <td>
+                                        {formatFecha(x.entrada)}
+                                    </td>
+                                    <td>
+                                        {x.salida}
+                                    </td>
+                                    <td>
+                                        {x.reporte}
+                                    </td>
+                                    <td>
+                                        {x.aprobado}
+                                    </td>
 
-                    <TableMod dataHeader={reparacionHeaders} dataBody={reparacionBody}>
-
-                    </TableMod>
-
-                </p>
+                                    <td>
+                                        {x.repuestos}
+                                    </td>
+                                    <td>
+                                        {x.costo}
+                                    </td>
+                                </tr>
+                            )
+                        }
+                    </tbody>
+                </table>
                 <div>
                     {(inicioSesion && (usuarioIniciado.rol === 'Admin')) ?
                         <Button color="success" value={repara.id} onClick={handleDarSalida}>Dar Salida</Button>
@@ -140,7 +209,7 @@ function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
                         <Button color="secondary" onClick={toggle}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
-            </li>
+            </div>
         </Fragment>
     )
 }

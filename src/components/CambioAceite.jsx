@@ -6,9 +6,9 @@ import CambioALista from './CambioALista'
 import Swal from 'sweetalert2';
 import Error from '../pages/Error'
 import TableAceite from './TableAceite'
+import TableCambio from './TableCambio'
 
 function CambioAceite({ inicioSesion, usuarioIniciado }) {
-
 
     const [trigger, setTrigger] = useState(false)
     const [modal, setModal] = useState(false);
@@ -20,7 +20,10 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
     const [errorModal, guardarErrorModal] = useState(false)
     const [placa, setPlaca] = useState('')
     const [cambio, guardarCambios] = useState([])
+    
+    //constantes para la tabla
     const header = ['Placa', 'Marca', 'Km Actual', 'Km Final', 'Km para el Cambio', 'Ultimo Cambio']
+    const headerAlerta = ['Placa', 'Km Actual', 'Km para el Cambio']
 
     const [triggerPlaca, setTriggerPlaca] = useState(false)
 
@@ -40,14 +43,6 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
     const handlerButtonIngresar = () => {
         setModal(!modal)
 
-        // if (kilometraje === ''  ) {
-        //     guardarErrorModal(true)
-        //     console.log(guardarErrorModal)
-        //     setModal(true)
-        //     return;
-        // }
-        // guardarErrorModal(false);
-        //const url = `${apiProd}camions/${idCamion.current}`;
         console.log("CAAAAMION", camionModal);
 
         idCamion.current = parseInt(camionModal[0].id)
@@ -68,7 +63,7 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
                 kmTotal: sumado,
                 cambio: 0
             }
-            console.log('No ocupa cambio');
+            console.log('No necesita cambio');
             const EditarCamion = async () => {
                 const resultado = await axios.patch(`${apiProd}camions/${idCamion.current}`, objCamion)
                 if (resultado.status === 200) {
@@ -92,7 +87,7 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
                 kmTotal: sumado,
                 cambio: 1
             }
-            console.log('Ocupa cambio')
+            console.log('Necesita cambio')
             const EditarCamion = async () => {
                 const resultado = await axios.patch(`${apiProd}camions/${idCamion.current}`, objCamion)
                 if (resultado.status === 200) {
@@ -120,29 +115,8 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
         } else {
             setTrigger(true)
         }
-        console.log("RECARGA", e, 'placa',placa);
-           
-
-            // if (placa === '') {
-            //     guardarError(true)
-            //     console.log(guardarError)
-            //     return;
-            // }
-            // guardarError(false);
-        }
-        //     const handlerButtonCamiones = () => {
-        //         setTriggerCamion(true)
-        //     // useEffect(() => {
-        //         if(triggerCamion){
-        //             const queryCamiones = async () => {
-        //                 const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placa}`)
-        //                 setCamiones(response.data)
-        //             }
-        //             queryCamiones();
-        //             setTriggerCamion(false)
-        //             console.log("CAMIIIIIIo", camiones);
-        //         }
-        //     // })
+        console.log("RECARGA", e, 'placa', placa);
+    }
 
     const props1 = []
     const {
@@ -151,9 +125,6 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
 
     const toggle = () => setModal(!modal);
 
-
-    // const handlerButtonCambioAceite = () => {
-    //     setTrigger(true)
     useEffect(() => {
         if (trigger) {
             const queryCambios = async () => {
@@ -176,76 +147,6 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
         consultaPlaca()
     }
 
-    // }
-
-    // const handlePlaca = async e => {
-    // e.preventDefault();
-    //         const queryCamion = async () => {
-    //             const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placaModal}`)
-    //             setCamionModal(response.data)
-    //         }
-    //         queryCamion()
-    // }
-
-    // <label className="ml-3">Placa:</label>
-    //         <div className="form-row">
-    //             <div className="form-group w-10 ml-3">
-    //                 <input type="text" className="form-control" name="placa" placeholder="Placa" onChange={e => setPlaca(e.target.value)} />
-    //             </div>
-    //         </div>
-
-    // <Button color="info" className="mt-2" onClick={handlerButtonAgregar}>Agregar Reporte</Button>
-    //                                     <Modal
-    //                                         isOpen={modal}
-    //                                         toggle={toggle}
-    //                                         className={className}
-    //                                         aria-labelledby="contained-modal-title-vcenter"
-    //                                         centered>
-    //                                         <ModalHeader toggle={toggle}>Reporte Kilometraje</ModalHeader>
-    //                                         <ModalBody>
-    //                                         {(errorModal) ? <Error mensaje='Campo Kilometraje es Requerido' /> : null}
-
-    //                                         <div className="form-group w-50">
-    //                                                 <h6>Placa:</h6>
-    //                                                 <input
-    //                                                     type="text"
-    //                                                     className="form-control mt-3  mr-3 mb-1"
-    //                                                     onChange={e => setPlacaModal(e.target.value)}
-    //                                                      />
-    //                                             <Button className="btn btn-success" onClick={handlePlaca}>Cargar Camion</Button>
-    //                                             </div>
-
-    //                                             {(camionModal.length !== 0) ?
-    //                                             <div className="form-group w-50">
-    //                                                 <h6>Ruta:</h6>
-    //                                                 <input
-    //                                                     id="disabledInput"
-    //                                                     type="text"
-    //                                                     className="form-control mt-3  mr-3 mb-1"
-    //                                                     disabled="true"
-    //                                                     ref={referenciaRuta}
-    //                                                     defaultValue={camionModal[0].ruta}
-    //                                                      />
-    //                                             </div> 
-    //                                             : null}
-
-    //                                             {(camionModal.length !== 0) ?
-    //                                             <div className="form-group w-50">
-    //                                                 <h6>Kilometraje:</h6>
-    //                                                 <input
-    //                                                     type="text"
-    //                                                     className="form-control mt-3  mr-3 mb-1"
-    //                                                     onChange={e => setKilometraje(e.target.value)}
-    //                                                      />
-    //                                             </div>
-    //                                              : null}
-    //                                         </ModalBody>
-    //                                         <ModalFooter>
-    //                                             <Button color="primary" onClick={handlerButtonIngresar}>Ingresar</Button>{' '}
-    //                                                     <Button color="warning" onClick={toggle}>Cancel</Button>
-    //                                         </ModalFooter>
-    //                                     </Modal>   
-
     return (
         <Fragment>
             <div class="col-md-8 mx-auto">
@@ -263,8 +164,16 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
                             <p className="mb-0 text-center">Consulte los datos Primero</p>
                         </div>
                         :
-                        <TableAceite headers = {header} props = {cambios}/>
-
+                        <div className = "disenoTablas">
+                            <div className = "tablaConsulta"> 
+                            <h3 className = "mt-4 text-center">Tabla Consulta</h3>
+                            <TableAceite headers={header} props={cambios} /> 
+                            </div>
+                           <div className = "tablaCambio"> 
+                           <h3 className = "mt-4 text-center">Tabla Cambio</h3>
+                           <TableCambio headers={headerAlerta} props={cambios} /> 
+                           </div>
+                        </div>
                     }
 
                 </form>
@@ -272,6 +181,5 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
         </Fragment >
     )
 }
-
 
 export default CambioAceite

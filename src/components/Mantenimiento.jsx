@@ -8,11 +8,7 @@ import { GoTools } from "react-icons/go";
 import { GiWeight } from "react-icons/gi";
 import { FaLeaf } from "react-icons/fa";
 
-
-
 function Mantenimiento() {
-
-
 
     return (
         <Fragment>

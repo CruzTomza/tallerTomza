@@ -81,10 +81,14 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
                 const consultaPlaca = async () => {
                     const response = await axios.get(`${apiProd}reparacions?filter[where][idCamion]=${placa}`)
                     guardarReparaciones(response.data)
+                    console.log('guardaREPA',reparaciones);
                     setTriggerPlaca(false)
                 }
                 consultaPlaca()
             }
+            setTriggerPlacaFecha(false)
+            setTriggerPlaca(false)
+            setTriggerFecha(false)
         })
 
     const props1 = []
@@ -284,16 +288,12 @@ function Reparacion({ inicioSesion, usuarioIniciado }) {
                     <p className="mb-0 text-center">Consulte los datos Primero</p>
                 </div>
                 :
-                <ul className="list-group mt-5">
-                    {reparaciones.map(repara => (
+                <div>
+                {console.log('aiuda',reparaciones)}
                         <ReparacionLista
-                            key={repara.id}
-                            repara={repara}
-                            inicioSesion={inicioSesion}
-                            usuarioIniciado={usuarioIniciado}
+                            repara={[reparaciones]}
                         />
-                    ))}
-                </ul>}
+                </div>}
         </form>
 
         </div>
