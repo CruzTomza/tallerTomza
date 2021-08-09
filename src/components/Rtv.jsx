@@ -43,7 +43,6 @@ function RTV({ inicioSesion, usuarioIniciado }) {
 
             {(error) ? <Error mensaje='Campo placa es obligatorio' /> : null}
             <form className="mt-2 mb-2" onSubmit={recarga}>
-                <label className="ml-3">Rtv:</label>
                 <div className="form-row">
                     <div className="form-group w-10 ml-3">
                         <select className="custom-select" onChange={e => setRtv(e.target.value)}>
@@ -51,9 +50,9 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                             <option value="Enero y Julio">Enero y Julio</option>
                             <option value="Febrero y Agosto">Febrero y Agosto</option>
                             <option value="Marzo y Setiembre">Marzo y Setiembre</option>
-                            <option value="Mayo y Noviembre">Mayo y Noviembre</option>
                             <option value="Abril y Octubre">Abril y Octubre</option>
-
+                            <option value="Mayo y Noviembre">Mayo y Noviembre</option>
+                            <option value="Junio y Diciembre">Junio y Diciembre</option>
                         </select>
                     </div>
                 </div>

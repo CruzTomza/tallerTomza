@@ -8,8 +8,6 @@ import Error from '../pages/Error'
 import TableAceite from './TableAceite'
 
 function CambioAceite({ inicioSesion, usuarioIniciado }) {
-
-
     const [trigger, setTrigger] = useState(false)
     const [modal, setModal] = useState(false);
     const [cambios, setCambios] = useState([])
@@ -120,29 +118,29 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
         } else {
             setTrigger(true)
         }
-        console.log("RECARGA", e, 'placa',placa);
-           
+        console.log("RECARGA", e, 'placa', placa);
 
-            // if (placa === '') {
-            //     guardarError(true)
-            //     console.log(guardarError)
-            //     return;
-            // }
-            // guardarError(false);
-        }
-        //     const handlerButtonCamiones = () => {
-        //         setTriggerCamion(true)
-        //     // useEffect(() => {
-        //         if(triggerCamion){
-        //             const queryCamiones = async () => {
-        //                 const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placa}`)
-        //                 setCamiones(response.data)
-        //             }
-        //             queryCamiones();
-        //             setTriggerCamion(false)
-        //             console.log("CAMIIIIIIo", camiones);
-        //         }
-        //     // })
+
+        // if (placa === '') {
+        //     guardarError(true)
+        //     console.log(guardarError)
+        //     return;
+        // }
+        // guardarError(false);
+    }
+    //     const handlerButtonCamiones = () => {
+    //         setTriggerCamion(true)
+    //     // useEffect(() => {
+    //         if(triggerCamion){
+    //             const queryCamiones = async () => {
+    //                 const response = await axios.get(`${apiProd}camions/?filter[where][placa]=${placa}`)
+    //                 setCamiones(response.data)
+    //             }
+    //             queryCamiones();
+    //             setTriggerCamion(false)
+    //             console.log("CAMIIIIIIo", camiones);
+    //         }
+    //     // })
 
     const props1 = []
     const {
@@ -263,7 +261,7 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
                             <p className="mb-0 text-center">Consulte los datos Primero</p>
                         </div>
                         :
-                        <TableAceite headers = {header} props = {cambios}/>
+                        <TableAceite headers={header} props={cambios} />
 
                     }
 
