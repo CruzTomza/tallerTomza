@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 
-
 function Table(props) {
     console.log(props)
     const [header, setHeader] = useState(props.headers)
     const [tableBody, setTableBody] = useState([])
     const [trigger, setTrigger] = useState(true)
-
+    
     useEffect(() => {
         if (trigger) {
             setTableBody(props.props)
@@ -14,21 +13,7 @@ function Table(props) {
         }
     })
 
-    const formatFecha = () => {
-        let formatted
-        let arrayFechas = []
-        
-        for (var i=0; i<tableBody.length; i++) {
-            
-            let date = new Date(tableBody[i].tc)
-            console.log(tableBody[i].tc);
-            formatted = date.toLocaleString('es-Es')
-            tableBody[i].tc= formatted
-            console.log('...',date.toLocaleString('es-Es'),tableBody);
-        }
-        return formatted
-    }
-    console.log('header', header, 'dataBody', tableBody)
+     console.log('header', header, 'dataBody', tableBody)
     return (
         <section>
             <div>
@@ -47,19 +32,10 @@ function Table(props) {
                                     {x.placa}
                                 </td>
                                 <td>
-                                    {x.marca}
-                                </td>
-                                <td>
                                     {x.kmInicial}
                                 </td>
                                 <td>
-                                    {x.kmTotal}
-                                </td>
-                                <td>
                                     {x.kmTotal - x.kmInicial}
-                                </td>
-                                <td>
-                                    {x.tc}
                                 </td>
                             </tr>
                         )}

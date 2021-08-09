@@ -13,18 +13,23 @@ function Table(props) {
         }
     })
 
-    const formatFecha = () => {
+    const formatFecha = (x) => {
         let formatted
-        let arrayFechas = []
-        
-        for (var i=0; i<tableBody.length; i++) {
-            
-            let date = new Date(tableBody[i].entrada)
-            formatted = date.toLocaleString('es-Es')
-            tableBody[i].entrada= formatted
-            console.log('...',date.toLocaleString('es-Es'),tableBody);
-        }
+
+        let date = new Date(x)
+        formatted = date.toLocaleString('es-Es')
+
+        console.log('formatted',formatted);
         return formatted
+        
+        // for (var i=0; i<tableBody.length; i++) {
+            
+        //     let date = new Date(tableBody[i].entrada)
+        //     formatted = date.toLocaleString('es-Es')
+        //     tableBody[i].entrada= formatted
+        //     console.log('...',date.toLocaleString('es-Es'),tableBody);
+        // }
+        // return formatted
     }
    
     console.log('header', header, 'dataBody', tableBody)
@@ -35,7 +40,7 @@ function Table(props) {
                     <thead>
                         <tr>
                             {header.map(x =>
-                                <th>{x}</th>
+                                <th scope='col'>{x}</th>
                             )}
                         </tr>
                     </thead>
@@ -43,13 +48,13 @@ function Table(props) {
                         {tableBody.map(x => 
                             <tr>
                                 <td>
-                                    {x.id}
+                                    {x.idCamion}
                                 </td>
                                 <td>
                                     {x.cedi}
                                 </td>
                                 <td>
-                                    {formatFecha()}
+                                    {formatFecha(x.entrada)}
                                 </td>
                                 <td>
                                     {x.salida}
