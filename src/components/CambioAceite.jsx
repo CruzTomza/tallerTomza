@@ -127,7 +127,7 @@ function CambioAceite({ inicioSesion, usuarioIniciado }) {
     useEffect(() => {
         if (trigger) {
             const queryCambios = async () => {
-                const response = await axios.get(`${apiProd}camions/?filter[where][cambio]=${1}`)
+                const response = await axios.get(`${apiProd}camions/?filter[order]=tc%20DESC`)
                 setCambios(response.data)
             }
             queryCambios();
