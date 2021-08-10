@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import environment from '../env/environment'
 import Error from '../pages/Error'
+import Popup from 'reactjs-popup';
 
 function RTV({ inicioSesion, usuarioIniciado }) {
     const [trigger, setTrigger] = useState(false)
@@ -39,14 +40,14 @@ function RTV({ inicioSesion, usuarioIniciado }) {
 
     return (
         <div className="col-md-8 mt-4 text-center mx-auto">
-            <h1>Revisión Técnica Vehicular</h1>
+            <h1 className='pb-4'>Revisión Técnica Vehicular</h1>
 
             {(error) ? <Error mensaje='Campo placa es obligatorio' /> : null}
             <form className="mt-2 mb-2" onSubmit={recarga}>
-                <div className="form-row">
-                    <div className="form-group w-10 ml-3">
+                <div className="form-row btn-align">
+                    <div className="form-group d-inline-flex">
                         <select className="custom-select" onChange={e => setRtv(e.target.value)}>
-                            <option disabled selected="">Consultar...</option>
+                            <option disabled selected>Consultar...</option>
                             <option value="Enero y Julio">Enero y Julio</option>
                             <option value="Febrero y Agosto">Febrero y Agosto</option>
                             <option value="Marzo y Setiembre">Marzo y Setiembre</option>
@@ -54,11 +55,24 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                             <option value="Mayo y Noviembre">Mayo y Noviembre</option>
                             <option value="Junio y Diciembre">Junio y Diciembre</option>
                         </select>
+                        <input type="submit" className="btn btn-primary ml-3 d-inline-flex" value="Consultar RTV" />
                     </div>
+                    <Popup trigger={<button type='button' className="btn btn-secondary h-75 ml-3">Actualizar RTV</button>}
+                        modal
+                        nested>
+                        {close => (
+                            <div className="modal">
+                                <button className="close" onClick={close}>
+                                    &times;
+                                </button>
+                                <span> Modal content </span>
+                            </div>
+                        )}
+                    </Popup>
                 </div>
-
-                <input type="submit" className="btn btn-primary ml-3 mr-2 mt-2" value="Consultar Mantenimieto" />
             </form>
+
+
 
             {(camiones.length === 0) ?
                 <div className="alert alert-dismissible alert-light mt-3">
@@ -67,12 +81,24 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                 </div>
                 :
                 <div>
-                    <ul className="list-group mt-3">
-
-                    </ul>
-                    <ul className="list-group mt-3">
-
-                    </ul>
+                    <table className='table'>
+                        <thead>
+                            <tr>
+                                <th>Placa</th>
+                                <th>Unidad de Negocio</th>
+                                <th>RTV</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {camiones.map(x =>
+                                <tr>
+                                    <td>{x.placa}</td>
+                                    <td>{x.unidad_negocio}</td>
+                                    <td>{x.rtv}</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             }
         </div>
