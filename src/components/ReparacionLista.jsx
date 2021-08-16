@@ -107,7 +107,7 @@ function ReparacionLista({ repara, inicioSesion, usuarioIniciado }) {
         console.log('formatted',formatted);
         return formatted
     }
-
+       
     return (
         <Fragment>
             <div className="list-group-item d-flex justify-content-between align-item-center mt-4" >
