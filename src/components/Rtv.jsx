@@ -72,8 +72,6 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                 </div>
             </form>
 
-
-
             {(camiones.length === 0) ?
                 <div className="alert alert-dismissible alert-light mt-3">
                     <h4 className="alert-heading text-center" >No Hay Datos</h4>
