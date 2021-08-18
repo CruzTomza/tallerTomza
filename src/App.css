@@ -9,7 +9,6 @@
 .tablaCambio {
   border: 1px solid lightsalmon;
   margin: 1em;
-
 }
 
 .tablaConsulta {
@@ -47,4 +46,8 @@
 .section-margins {
   width: fit-content;
   margin: 0 auto;
+}
+
+.text-start {
+  text-align: start !important;
 }

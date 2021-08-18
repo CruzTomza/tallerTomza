@@ -3,9 +3,11 @@ import axios from 'axios';
 import environment from '../env/environment'
 import Error from '../pages/Error'
 import ReactModal from 'react-modal';
+import Swal from 'sweetalert2'
 
 function RTV({ inicioSesion, usuarioIniciado }) {
-    const [trigger, setTrigger] = useState(false)
+    const [triggerRTV, setTriggerRTV] = useState(false)
+    const [triggerPlaca, setTriggerPlaca] = useState(false)
     const [camiones, guardarCamiones] = useState([])
     const [error, guardarError] = useState(false)
     const [rtv, setRtv] = useState('')
@@ -13,13 +15,19 @@ function RTV({ inicioSesion, usuarioIniciado }) {
     const [placaAct, setPlacaAct] = useState('')
     const [rtvAct, setRtvAct] = useState('')
     const [triggerAct, setTriggerAct] = useState('')
+    const [placa, setPlaca] = useState('')
 
     const apiProd = environment.url
 
     const recarga = e => {
         e.preventDefault();
-        setTrigger(true);
-        if (rtv === '') {
+        if (rtv !== '') {
+            setTriggerRTV(true)
+        }
+        if (placa !== '') {
+            setTriggerPlaca(true)
+        }
+        if (rtv === '' && placa === '') {
             guardarError(true)
             console.log(guardarError)
             return;
@@ -28,17 +36,25 @@ function RTV({ inicioSesion, usuarioIniciado }) {
     }
 
     useEffect(() => {
-        if (trigger) {
-            console.log("PASA")
+        if (triggerRTV) {
             const consultaCamion = async () => {
                 const response = await axios.get(`${apiProd}camions?filter[where][rtv]=${rtv}`);
                 guardarCamiones(response.data)
                 console.log("CAMIONES", response.data)
             }
             consultaCamion()
-            setTrigger(false)
+            setTriggerRTV(false)
         }
-    }, [trigger, apiProd])
+        if (triggerPlaca) {
+            const consultaCamion = async () => {
+                const response = await axios.get(`${apiProd}camions?filter[where][placa]=${placa}`);
+                guardarCamiones(response.data)
+                console.log("CAMIONES", response.data)
+            }
+            consultaCamion()
+            setTriggerRTV(false)
+        }
+    }, [triggerRTV, triggerPlaca, apiProd, rtv, placa])
 
     const submit = () => {
         setTriggerAct(true)
@@ -52,15 +68,20 @@ function RTV({ inicioSesion, usuarioIniciado }) {
             <form className="mt-2 mb-2" onSubmit={recarga}>
                 <div className="form-row btn-align">
                     <div className="form-group d-inline-flex">
-                        <select className="custom-select" onChange={e => setRtv(e.target.value)}>
-                            <option disabled selected>Consultar...</option>
-                            <option value="Enero y Julio">Enero y Julio</option>
-                            <option value="Febrero y Agosto">Febrero y Agosto</option>
-                            <option value="Marzo y Setiembre">Marzo y Setiembre</option>
-                            <option value="Abril y Octubre">Abril y Octubre</option>
-                            <option value="Mayo y Noviembre">Mayo y Noviembre</option>
-                            <option value="Junio y Diciembre">Junio y Diciembre</option>
-                        </select>
+                        <div className='text-start'>
+                            <select className="custom-select" onChange={e => setRtv(e.target.value)}>
+                                <option disabled selected>Mes</option>
+                                <option value="Enero y Julio">Enero y Julio</option>
+                                <option value="Febrero y Agosto">Febrero y Agosto</option>
+                                <option value="Marzo y Setiembre">Marzo y Setiembre</option>
+                                <option value="Abril y Octubre">Abril y Octubre</option>
+                                <option value="Mayo y Noviembre">Mayo y Noviembre</option>
+                                <option value="Junio y Diciembre">Junio y Diciembre</option>
+                            </select>
+                        </div>
+                        <div className='text-start ml-3'>
+                            <input type='text' className='form-control' placeholder='Placa' onChange={e => setPlaca(e.target.value)}></input>
+                        </div>
                         <input type="submit" className="btn btn-primary ml-3 d-inline-flex" value="Consultar RTV" />
                     </div>
                     <button type='button' onClick={() => setShowModal(true)} className="btn btn-secondary h-75 ml-3">Actualizar RTV</button>
@@ -105,7 +126,7 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                 </div>
             </form>
 
-            {(camiones.length === 0) ?
+            {(camiones.length === 0 || camiones[0].placa === '') ?
                 <div className="alert alert-dismissible alert-light mt-3">
                     <h4 className="alert-heading text-center" >No Hay Datos</h4>
                     <p className="mb-0 text-center">Consulte los datos Primero</p>
