@@ -36,6 +36,7 @@ function RTV({ inicioSesion, usuarioIniciado }) {
     }
 
     useEffect(() => {
+
         if (triggerRTV) {
             const consultaCamion = async () => {
                 const response = await axios.get(`${apiProd}camions?filter[where][rtv]=${rtv}`);
@@ -55,6 +56,29 @@ function RTV({ inicioSesion, usuarioIniciado }) {
             setTriggerRTV(false)
         }
     }, [triggerRTV, triggerPlaca, apiProd, rtv, placa])
+
+    useEffect(() => {
+        var objToSend = {
+            rtv: rtvAct
+        }
+        if (triggerAct) {
+            var id = ''
+            const getID = async () => {
+                const response = await axios.get(`${apiProd}camions/findOne?filter[where][placa]=${placaAct}`);
+                id = response.data.id
+                const actRTV = async () => {
+                    console.log(objToSend, id);
+                    const response = await axios.patch(`${apiProd}camions/${id}`, objToSend)
+                    console.log('actRTV', response.status);
+                }
+                actRTV()
+            }
+
+            getID()
+
+            setTriggerAct(false)
+        }
+    })
 
     const submit = () => {
         setTriggerAct(true)
@@ -120,7 +144,6 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                                     <button type='button' className='btn btn-secondary' onClick={() => setShowModal(false)}>Cancel</button>
                                 </div>
                             </form>
-
                         </section>
                     </ReactModal>
                 </div>
