@@ -7,8 +7,9 @@
 }
 
 .tablaCambio {
-border: 1px solid lightsalmon;
-margin: 1em;
+  border: 1px solid lightsalmon;
+  margin: 1em;
+
 }
 
 .tablaConsulta {
@@ -16,44 +17,34 @@ margin: 1em;
   margin: 1em;
 }
 
-  .btn-align {
-    justify-content: space-between;
-  }
+.btn-align {
+  justify-content: space-between;
+}
 
-  .modal {
-    font-size: 12px;
-  }
+.Modal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  background-color: papayawhip;
+  width: 700px;
+  height: auto;
+  margin: 0 auto;
+  border: 1px solid gray;
+  box-shadow: 5px 5px 15px grey;
+  border-radius: 4px;
+  padding: 10px;
+}
 
-  .modal>.header {
-    width: 100%;
-    border-bottom: 1px solid gray;
-    font-size: 18px;
-    text-align: center;
-    padding: 5px;
-  }
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 
-  .modal>.content {
-    width: 100%;
-    padding: 10px 5px;
-  }
-
-  .modal>.actions {
-    width: 100%;
-    padding: 10px 5px;
-    margin: auto;
-    text-align: center;
-  }
-
-  .modal>.close {
-    cursor: pointer;
-    position: absolute;
-    display: block;
-    padding: 2px 5px;
-    line-height: 20px;
-    right: -10px;
-    top: -10px;
-    font-size: 24px;
-    background: #ffffff;
-    border-radius: 18px;
-    border: 1px solid #cfcece;
-  }
+.section-margins {
+  width: fit-content;
+  margin: 0 auto;
+}
