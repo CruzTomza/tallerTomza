@@ -73,9 +73,7 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                 }
                 actRTV()
             }
-
             getID()
-
             setTriggerAct(false)
         }
     })
