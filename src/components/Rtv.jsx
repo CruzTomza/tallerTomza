@@ -4,6 +4,8 @@ import environment from '../env/environment'
 import Error from '../pages/Error'
 import ReactModal from 'react-modal';
 import Swal from 'sweetalert2'
+import TableCRTV from './TableCRTV'
+import TableRTV from './TableRTV'
 
 function RTV({ inicioSesion, usuarioIniciado }) {
     const [triggerRTV, setTriggerRTV] = useState(false)
@@ -16,6 +18,9 @@ function RTV({ inicioSesion, usuarioIniciado }) {
     const [rtvAct, setRtvAct] = useState('')
     const [triggerAct, setTriggerAct] = useState('')
     const [placa, setPlaca] = useState('')
+
+    const header = ['Placa', 'Unidad de Negocio', 'RTV']
+    const headerAlerta = ['Placa', 'RTV']
 
     const apiProd = environment.url
 
@@ -121,7 +126,7 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                                     <div className='form-group d-inline-flex'>
                                         <div>
                                             <label>Digite la placa:</label>
-                                            <input type='text' className="form-control" name="placa" placeholder="Placa" onChange={e => setPlacaAct(e.target.value)}></input>
+                                        <input type='text' className="form-control" name="placa" placeholder="Placa" onChange={e => setPlacaAct(e.target.value)}></input>
                                         </div>
                                         <div className='ml-3'>
                                             <label >Seleccione el Mes de RTV:</label>
@@ -153,24 +158,19 @@ function RTV({ inicioSesion, usuarioIniciado }) {
                     <p className="mb-0 text-center">Consulte los datos Primero</p>
                 </div>
                 :
-                <div>
+                <div className = 'd-flex'>
                     <table className='table'>
-                        <thead>
-                            <tr>
-                                <th>Placa</th>
-                                <th>Unidad de Negocio</th>
-                                <th>RTV</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {camiones.map(x =>
-                                <tr>
-                                    <td>{x.placa}</td>
-                                    <td>{x.unidad_negocio}</td>
-                                    <td>{x.rtv}</td>
-                                </tr>
-                            )}
-                        </tbody>
+                    <div className="disenoTablas">
+                    <div className="tablaConsulta">
+                        <h3 className="mt-4 text-center">Tabla Consulta</h3>
+                        <TableRTV headers={header} props={camiones} />
+                    </div>
+                    <div className="tablaCambio">
+                        <h3 className="mt-4 text-center">Tabla RTV</h3>
+                        <TableCRTV headers={headerAlerta} props={camiones} />
+                    </div>
+                    </div>
+                        
                     </table>
                 </div>
             }
