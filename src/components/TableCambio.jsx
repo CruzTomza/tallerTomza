@@ -19,28 +19,27 @@ function Table(props) {
             setTrigger(false)
         }
     })
-    useEffect(() => {
-        if (mount){
-            const queryCamion = async () => {
-                const response = await axios.get(`${apiProd}camions`)
-                setDatosCamion(response.data)
-                console.log('response',response.data,'props', tableBody);
+    
+        console.log('mount', mount);
+    if (mount){
+        const queryCamion = async () => {
+            const response = await axios.get(`${apiProd}camions`)
+            setDatosCamion(response.data)
+            const alertaCamiones = () => {
+                var datos = response.data
+                for (var i = 0; i < datos.length; i++) {
+        
+                    if ((datos[i].kmTotal - datos[i].kmInicial) < 3000) {
+                        camionAlerta.push(datos[i])
+                        console.log('alerta', camionAlerta);
+                    }
+                }
             }
-            queryCamion()
             alertaCamiones()
-            setMount(false)
         }
-    })
-
-
-    const alertaCamiones = () => {
-        for (var i = 0; i < datosCamion.length; i++) {
-
-            if ((datosCamion[i].kmTotal - datosCamion[i].kmInicial) < 3000) {
-                camionAlerta.push(datosCamion[i])
-
-            }
-        }
+        queryCamion()
+        
+        setMount(false)
     }
 
     console.log('header', header, 'dataBody', tableBody)

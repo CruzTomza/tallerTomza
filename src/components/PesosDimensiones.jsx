@@ -3,23 +3,32 @@ import axios from 'axios';
 import environment from '../env/environment'
 import Error from '../pages/Error'
 import ReactModal from 'react-modal';
+import TableCPesosDimensiones from './TableCRTV'
+import TablePesosDimensiones from './TableRTV'
 
 function PesosDimensiones({ inicioSesion, usuarioIniciado }) {
-    const [trigger, setTrigger] = useState(false)
+    const [triggerPD, setTriggerPD] = useState(false)
+    const [triggerPlaca, setTriggerPlaca] = useState(false)
+    const [triggerConsultaPD, setTriggerConsultaPD] = useState(false)
     const [camiones, guardarCamiones] = useState([])
     const [error, guardarError] = useState(false)
-    const [consulta, setConsulta] = useState('')
+    const [consultaPD, setConsultaPD] = useState('')
     const [showModal, setShowModal] = useState(false)
     const [placaAct, setPlacaAct] = useState('')
-    const [consultaAct, setConsultaAct] = useState('')
+    const [consultaPDAct, setConsultaPDAct] = useState('')
     const [triggerAct, setTriggerAct] = useState('')
+    const [placa, setPlaca] = useState('')
 
     const apiProd = environment.url
 
     const recarga = e => {
-        e.preventDefault();
-        setTrigger(true);
-        if (consulta === '') {
+        if (consultaPD !== '') {
+            setTriggerConsultaPD(true)
+        }
+        if (placa !== '') {
+            setTriggerPlaca(true)
+        }
+        if (consultaPD === '' && placa === '') {
             guardarError(true)
             console.log(guardarError)
             return;
@@ -28,17 +37,17 @@ function PesosDimensiones({ inicioSesion, usuarioIniciado }) {
     }
 
     useEffect(() => {
-        if (trigger) {
+        if (triggerPD) {
             console.log("PASA")
-            const consulta = async () => {
-                const response = await axios.get(`${apiProd}camions?filter[where][consulta]=${consulta}`);
+            const consultaCamion = async () => {
+                const response = await axios.get(`${apiProd}camions?filter[where][consultaPD]=${consultaPD}`);
                 guardarCamiones(response.data)
                 console.log("CAMIONES", response.data)
             }
-            consulta()
-            setTrigger(false)
+            consultaCamion()
+            setTriggerPD(false)
         }
-    }, [trigger, apiProd])
+    }, [triggerPD, apiProd, consultaPD, triggerPlaca, placa])
 
     const submit = () => {
         setTriggerAct(true)
@@ -47,18 +56,22 @@ function PesosDimensiones({ inicioSesion, usuarioIniciado }) {
     return (
         <div className='col-md-8 text-center mx-auto mt-4'>
             <h1 className='pb-4'>Pesos y Dimensiones</h1>
-            <form className='mt-2' onSubmit={consulta}>
+            <form className='mt-2' onSubmit={consultaPD}>
                 <div className='form-row btn-align'>
                     <div className='d-inline-flex'>
-                        <select className='custom-select'>
-                            <option disabled selected>Seleccionar ...</option>
-                            <option>Enero y Julio</option>
-                            <option>Febrero y Agosto</option>
-                            <option>Marzo y Septiembre</option>
-                            <option>Abril y Octubre</option>
-                            <option>Mayo y Noviembre</option>
-                            <option>Junio y Diciembre</option>
+                    <div className='text-start'></div>
+                        <select className='custom-select' onChange={e => setConsultaPD(e.target.value)}>
+                            <option disabled selected>Seleccionar Mes</option>
+                            <option value="Enero y Julio">Enero y Julio</option>
+                            <option value="Febrero y Agosto">Febrero y Agosto</option>
+                            <option value="Marzo y Septiembre">Marzo y Septiembre</option>
+                            <option value="Abril y Octubre">Abril y Octubre</option>
+                            <option value="Mayo y Noviembre">Mayo y Noviembre</option>
+                            <option value="Junio y Diciembre">Junio y Diciembre</option>
                         </select>
+                        <div className='text-start ml-3'>
+                        <input type='text' className='form-control' placeholder='Placa' onChange={e => setPlaca(e.target.value)}></input>
+                        </div>
                         <input type="submit" className="btn btn-primary ml-3 d-inline-flex" value="Consultar Pesos y Dimensiones" />
                     </div>
                     <button type='button' onClick={() => setShowModal(true)} className="btn btn-secondary h-75 ml-3">Actualizar</button>
@@ -82,7 +95,7 @@ function PesosDimensiones({ inicioSesion, usuarioIniciado }) {
                                 </div>
                                 <div className='ml-3'>
                                     <label >Seleccione el mes:</label>
-                                    <select className='custom-select' onChange={e => setConsultaAct(e.target.value)}>
+                                    <select className='custom-select' onChange={e => setConsultaPDAct(e.target.value)}>
                                         <option disabled selected>Seleccionar...</option>
                                         <option value="Enero y Julio">Enero y Julio</option>
                                         <option value="Febrero y Agosto">Febrero y Agosto</option>
@@ -104,7 +117,7 @@ function PesosDimensiones({ inicioSesion, usuarioIniciado }) {
 
             </ReactModal>
 
-            {(camiones.length === 0) ?
+            {(camiones.length === 0 || camiones[0].placa === '') ?
                 <div className="alert alert-dismissible alert-light mt-3">
                     <h4 className="alert-heading text-center" >No hay datos disponibles aún</h4>
                     <p className="mb-0 text-center">Antes debe consultar los datos</p>

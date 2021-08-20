@@ -4,16 +4,22 @@
 
 .disenoTablas {
   display: flex;
+  justify-content: space-around;
 }
 
 .tablaCambio {
   border: 1px solid lightsalmon;
   margin: 1em;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  min-width: 400px;
 }
 
 .tablaConsulta {
   border: 1px solid lightskyblue;
   margin: 1em;
+  min-width: 600px;
 }
 
 .btn-align {
